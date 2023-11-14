@@ -29,16 +29,23 @@ export async function createInvoice(formData: FormData) {
   const amountInCents = amount * 100;
   const today = new Date().toISOString().split('T')[0];
 
-  await sql`
-    INSERT INTO invoices (customer_id, amount, status, date)
-    VALUES (${customerId}, ${amountInCents}, ${status}, ${today})
-  `;
+  try {
+    await sql`
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${customerId}, ${amountInCents}, ${status}, ${today})
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Create Invoice.',
+    };
+  }
 
-  // Clear Invoices page cache and trigger a new request to the server to get new added data
+  // Clear Invoices page's cache and trigger a new request to the server to rerender Invoices page
   revalidatePath('/ui/dashboard/invoices');
 
   // Redirect to Invoices page
-  redirect('/ui/dashboard/invoices');
+  redirect('/ui/dashboard/invoices'); // This will throw an error so must put it outside of try catch block
+
 }
 
 export async function updateInvoice(id: string, formData: FormData) {
@@ -50,17 +57,30 @@ export async function updateInvoice(id: string, formData: FormData) {
  
   const amountInCents = amount * 100;
  
-  await sql`
-    UPDATE invoices
-    SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-    WHERE id = ${id}
-  `;
- 
+  try {
+    await sql`
+      UPDATE invoices
+      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+      WHERE id = ${id}
+    `;
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Update Invoice.',
+    };
+  }
+
   revalidatePath('/ui/dashboard/invoices');
   redirect('/ui/dashboard/invoices');
 }
 
 export async function deleteInvoice(id: string) {
-  await sql`DELETE FROM invoices WHERE id = ${id}`;
-  revalidatePath('/ui/dashboard/invoices');
+  try {
+    await sql`DELETE FROM invoices WHERE id = ${id}`;
+    revalidatePath('/ui/dashboard/invoices');
+    return { message: 'Deleted Invoice.' };
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to Delete Invoice.',
+    };
+  }
 }
