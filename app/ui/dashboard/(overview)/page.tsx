@@ -1,3 +1,4 @@
+// import { Revenue, LatestInvoice } from '@/app/lib/definitions';
 // import { Card } from '@/app/ui/dashboard/cards';
 import CardWrapper from '@/app/ui/dashboard/cards';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
@@ -25,8 +26,8 @@ export default async function Page() {
   //   totalPendingInvoices,
   // } = await fetchCardData();
 
-  // let revenue : any[] = [];
-  // let latestInvoices : any[] = [];
+  // let revenue : Revenue[] = [];
+  // let latestInvoices : LatestInvoice[] = [];
   // let cardData: {
   //   numberOfInvoices: number;
   //   numberOfCustomers: number;
