@@ -1,5 +1,5 @@
-import Form from '@/app/ui/dashboard/invoices/[id]/edit/edit-form';
-import Breadcrumbs from '@/app/ui/dashboard/invoices/breadcrumbs';
+import Form from '@/app/(ui)/dashboard/invoices/[id]/edit/edit-form';
+import Breadcrumbs from '@/app/(ui)/dashboard/invoices/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
  
@@ -18,10 +18,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Invoices', href: '/ui/dashboard/invoices' },
+          { label: 'Invoices', href: '/(ui)/dashboard/invoices' },
           {
             label: 'Edit Invoice',
-            href: `/ui/dashboard/invoices/${id}/edit`,
+            href: `/(ui)/dashboard/invoices/${id}/edit`,
             active: true,
           },
         ]}
