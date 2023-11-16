@@ -8,12 +8,22 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+      
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
-      } else if (isLoggedIn) {
+        const callbackUrl = nextUrl.pathname;
+        // Redirect unauthenticated users to login page with callbackUrl
+        return Response.redirect(new URL(`/login?callbackUrl=${callbackUrl}`, nextUrl));
+      }
+      
+      if (isLoggedIn) {
+        if (nextUrl.href.includes('callbackUrl')) {
+          const callbackUrl = decodeURIComponent(nextUrl.href.split('?callbackUrl=')[1]);
+          return Response.redirect(new URL(callbackUrl, nextUrl));
+        }
         return Response.redirect(new URL('/dashboard', nextUrl));
       }
+
       return true;
     },
   },
