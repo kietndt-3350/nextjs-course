@@ -1,10 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import {
-  useQuery,
-  keepPreviousData,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { invoiceApi } from '@/client-apis/invoiceApi';
 import Pagination from '@/app/(ui)/dashboard/invoices/_components/pagination';
 import Search from '@/app/(ui)/_components/search';
@@ -28,7 +25,6 @@ export default function PageInner({
   const invoices = useQuery({
     queryKey: ['invoices', searchParams],
     queryFn: () => invoiceApi.getAll(searchParams),
-    placeholderData: keepPreviousData,
   });
 
   return (

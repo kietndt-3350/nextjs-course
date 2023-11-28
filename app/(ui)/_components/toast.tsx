@@ -11,14 +11,16 @@ const commonConfig : ToastOptions = {
   theme: 'light'
 };
 
-export function toggleToast(type: string | null | undefined, message: string | null | undefined) {
+export function toggleToast(type: Number | string | null | undefined, message: string | null | undefined) {
   switch (type) {
     case 'pending':
       toast.loading(message, commonConfig);
       break;
+    case 200:
     case 'success':
       toast.success(message + ' 👌', commonConfig);
       break;
+    case 400:
     case 'rejected':
       toast.error(message + ' 🤯', commonConfig);
       break;

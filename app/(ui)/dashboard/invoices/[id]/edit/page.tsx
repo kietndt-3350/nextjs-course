@@ -3,6 +3,13 @@ import { notFound } from 'next/navigation';
 import Form from '@/app/(ui)/dashboard/invoices/[id]/edit/edit-form';
 import Breadcrumbs from '@/app/(ui)/_components/breadcrumbs';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { invoiceApi } from '@/client-apis/invoiceApi';
+import { customerApi } from '@/client-apis/customerApi';
 
 export const metadata: Metadata = {
   title: 'Update Invoices',
@@ -10,14 +17,19 @@ export const metadata: Metadata = {
  
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const [invoice, customers] = await Promise.all([
-    fetchInvoiceById(id),
-    fetchCustomers(),
-  ]);
 
-  if (!invoice) {
-    notFound();
-  }
+  const queryClient = new QueryClient();
+
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ['customers'],
+      queryFn: () => customerApi.getAll(),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ['invoice', id],
+      queryFn: () => invoiceApi.getById(id),
+    }),
+  ]);
 
   return (
     <main>
@@ -31,7 +43,9 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <Form invoice={invoice} customers={customers} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Form id={id} />
+      </HydrationBoundary>
     </main>
   );
 }

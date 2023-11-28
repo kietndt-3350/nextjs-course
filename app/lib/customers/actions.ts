@@ -50,7 +50,6 @@ export async function createCustomer(prevState: State, formData: FormData) {
 
   // Redirect to Invoices page
   redirect('/dashboard/customers'); // This will throw an error so must put it outside of try catch block
-
 }
 
 export async function updateInvoice(id: string, prevState: State, formData: FormData) {

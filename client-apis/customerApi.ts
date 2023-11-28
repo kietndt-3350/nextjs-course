@@ -1,9 +1,9 @@
 import { api } from "./configs/axiosConfigs";
 
-export const invoiceApi = {
+export const customerApi = {
   getAll: async function (searchParams?: { query?: string; page?: string }) {
     const response = await api.request({
-      url: "/invoices",
+      url: "/customers",
       method: "GET",
       params: searchParams,
     });
@@ -13,15 +13,6 @@ export const invoiceApi = {
     const response = await api.request({
       url: `/invoices/${id}`,
       method: "GET",
-    });
-    return response.data;
-  },
-  updateById: async function (id?: string, formData?: FormData) {
-    const response = await api.request({
-      url: `/invoices/${id}`,
-      method: 'PATCH',
-      data: formData,
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data;
   },
