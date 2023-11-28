@@ -1,12 +1,12 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import Pagination from '@/app/(ui)/dashboard/invoices/pagination';
-import Search from '@/app/(ui)/search';
+import Pagination from '@/app/(ui)/dashboard/invoices/_components/pagination';
+import Search from '@/app/(ui)/_components/search';
 import Table from '@/app/(ui)/dashboard/customers/table';
-import { CreateInvoice } from '@/app/(ui)/dashboard/invoices/buttons';
+import { CreateCustomer } from '@/app/(ui)/dashboard/customers/buttons';
 import { lusitana } from '@/app/(ui)/fonts';
-import { CustomersTableSkeleton } from '@/app/(ui)/skeletons';
-import { fetchInvoicesPages } from '@/app/lib/data';
+import { CustomersTableSkeleton } from '@/app/(ui)/_components/skeletons';
+import { fetchCustomersPages } from '@/app/lib/data';
 
 export const metadata: Metadata = {
   title: 'Customers',
@@ -22,7 +22,7 @@ export default async function Page({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const totalPages = await fetchInvoicesPages(query);
+  const totalPages = await fetchCustomersPages(query);
 
   return (
     <div className="w-full">
@@ -31,7 +31,7 @@ export default async function Page({
       </div>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search customers..." />
-        {/* <CreateInvoice /> */}
+        <CreateCustomer />
       </div>
       <Suspense key={query + currentPage} fallback={<CustomersTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />

@@ -2,10 +2,11 @@
 
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+// import { redirect } from 'next/navigation';
 import { CreateInvoiceSchema, UpdateInvoiceSchema } from './schemas';
 
 export type State = {
+  status?: string | null;
   errors?: {
     customerId?: string[];
     amount?: string[];
@@ -27,8 +28,9 @@ export async function createInvoice(prevState: State, formData: FormData) {
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      status: 'rejected',
       message: 'Missing Fields. Failed to Create Invoice.',
+      errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
@@ -43,16 +45,21 @@ export async function createInvoice(prevState: State, formData: FormData) {
     `;
   } catch (error) {
     return {
+      status: 'rejected',
       message: 'Database Error: Failed to Create Invoice.',
     };
   }
 
   // Clear Invoices page's cache and trigger a new request to the server to rerender Invoices page
-  revalidatePath('/(ui)/dashboard/invoices');
+  revalidatePath('/dashboard/invoices');
+
+  return {
+    status: 'success',
+    message: 'Create Invoice successfully.',
+  }
 
   // Redirect to Invoices page
-  redirect('/(ui)/dashboard/invoices'); // This will throw an error so must put it outside of try catch block
-
+  // redirect('/dashboard/invoices'); // This will throw an error so must put it outside of try catch block
 }
 
 export async function updateInvoice(id: string, prevState: State, formData: FormData) {
@@ -65,8 +72,9 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      status: 'rejected',
       message: 'Missing Fields. Failed to Update Invoice.',
+      errors: validatedFields.error.flatten().fieldErrors,
     };
   }
  
@@ -79,24 +87,37 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
       SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
       WHERE id = ${id}
     `;
+
+    revalidatePath('/dashboard/invoices');
+
+    return {
+      status: 'success',
+      message: 'Update Invoice successfully.',
+    }
   } catch (error) {
     return {
+      status: 'rejected',
       message: 'Database Error: Failed to Update Invoice.',
     };
   }
 
-  revalidatePath('/(ui)/dashboard/invoices');
-  redirect('/(ui)/dashboard/invoices');
+  // redirect('/dashboard/invoices');
 }
 
 export async function deleteInvoice(id: string) {
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
-    revalidatePath('/(ui)/dashboard/invoices');
-    return { message: 'Deleted Invoice successfully.' };
   } catch (error) {
     return {
+      status: 'rejected',
       message: 'Database Error: Failed to Delete Invoice.',
     };
   }
+
+  revalidatePath('/dashboard/invoices');
+  
+  return {
+    status: 'success',
+    message: 'Deleted Invoice successfully.'
+  };
 }

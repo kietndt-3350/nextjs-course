@@ -1,65 +1,20 @@
-// import { Revenue, LatestInvoice } from '@/app/lib/definitions';
-// import { Card } from '@/app/(ui)/dashboard/cards';
-import CardWrapper from '@/app/(ui)/dashboard/cards';
-import RevenueChart from '@/app/(ui)/dashboard/revenue-chart';
-import LatestInvoices from '@/app/(ui)/dashboard/latest-invoices';
-import { lusitana } from '@/app/(ui)/fonts';
-// import {
-//   fetchRevenue,
-//   fetchLatestInvoices,
-//   fetchCardData
-// } from '@/app/lib/data';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+import CardWrapper from '@/app/(ui)/dashboard/_components/cards';
+import RevenueChart from '@/app/(ui)/dashboard/_components/revenue-chart';
+import LatestInvoices from '@/app/(ui)/dashboard/_components/latest-invoices';
+import { lusitana } from '@/app/(ui)/fonts';
 import {
   CardsSkeleton,
   RevenueChartSkeleton,
   LatestInvoicesSkeleton
-} from '@/app/(ui)/skeletons';
-
-import { Metadata } from 'next';
+} from '@/app/(ui)/_components/skeletons';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
 };
 
 export default async function Page() {
-  // const revenue = await fetchRevenue();
-  // const latestInvoices = await fetchLatestInvoices();
-  // const {
-  //   numberOfInvoices,
-  //   numberOfCustomers,
-  //   totalPaidInvoices,
-  //   totalPendingInvoices,
-  // } = await fetchCardData();
-
-  // let revenue : Revenue[] = [];
-  // let latestInvoices : LatestInvoice[] = [];
-  // let cardData: {
-  //   numberOfInvoices: number;
-  //   numberOfCustomers: number;
-  //   totalPaidInvoices: string;
-  //   totalPendingInvoices: string;
-  // } = {
-  //   numberOfInvoices: 0,
-  //   numberOfCustomers: 0,
-  //   totalPaidInvoices: '',
-  //   totalPendingInvoices: '',
-  // };
-
-  // await Promise.all([
-  //   fetchRevenue(),
-  //   fetchLatestInvoices(),
-  //   fetchCardData()
-  // ]).then((responses) => {
-  //   if (responses && responses.length === 3) {
-  //     revenue = responses[0];
-  //     latestInvoices = responses[1];
-  //     cardData = responses[2];
-  //   }
-  // }).catch((error) => {
-  //   console.error('Error fetching data:', error);
-  // });;
-
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
@@ -67,20 +22,14 @@ export default async function Page() {
       </h1>
       <div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* <Card title="Collected" value={totalPaidInvoices} type="collected" />
-          <Card title="Pending" value={totalPendingInvoices} type="pending" />
-          <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
-          <Card title="Total Customers" value={numberOfCustomers} type="customers" /> */}
           <Suspense fallback={<CardsSkeleton />}>
             <CardWrapper />
           </Suspense>
         </div>
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-          {/* <RevenueChart revenue={revenue} /> */}
           <Suspense fallback={<RevenueChartSkeleton />}>
             <RevenueChart />
           </Suspense>
-          {/* <LatestInvoices latestInvoices={latestInvoices} /> */}
           <Suspense fallback={<LatestInvoicesSkeleton />}>
             <LatestInvoices />
           </Suspense>

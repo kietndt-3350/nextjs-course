@@ -1,6 +1,4 @@
 import Image from 'next/image';
-import { lusitana } from '@/app/(ui)/fonts';
-import Search from '@/app/(ui)/search';
 import { CustomersTable } from '@/app/lib/definitions';
 import { fetchFilteredCustomers } from '@/app/lib/data';
 import { UpdateCustomer, DeleteCustomer } from '@/app/(ui)/dashboard/customers/buttons';

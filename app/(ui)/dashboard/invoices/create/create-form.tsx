@@ -1,6 +1,8 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
+import { useEffect } from 'react';
+import { useFormState } from 'react-dom';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
   CheckIcon,
@@ -8,13 +10,22 @@ import {
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Button } from '@/app/(ui)/button';
+import { Button } from '@/app/(ui)/_components/button';
+import { toggleToast } from '@/app/(ui)/_components/toast';
+import { CustomerField } from '@/app/lib/definitions';
 import { createInvoice } from '@/app/lib/invoices/actions';
-import { useFormState } from 'react-dom';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
-  const initialState = { message: null, errors: {} };
+  const initialState = { status: null, message: null, errors: {} };
   const [state, dispatch] = useFormState(createInvoice, initialState);
+
+  useEffect(() => {
+    toggleToast(state.status, state.message);
+
+    if (state.status === 'success') {
+      redirect('/dashboard/invoices');
+    }
+  }, [state]);
 
   return (
     <form action={dispatch}>

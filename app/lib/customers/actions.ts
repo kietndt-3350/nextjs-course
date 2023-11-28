@@ -46,10 +46,10 @@ export async function createCustomer(prevState: State, formData: FormData) {
   }
 
   // Clear Invoices page's cache and trigger a new request to the server to rerender Invoices page
-  revalidatePath('/(ui)/dashboard/customers');
+  revalidatePath('/dashboard/customers');
 
   // Redirect to Invoices page
-  redirect('/(ui)/dashboard/customers'); // This will throw an error so must put it outside of try catch block
+  redirect('/dashboard/customers'); // This will throw an error so must put it outside of try catch block
 
 }
 
@@ -82,14 +82,14 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     };
   }
 
-  revalidatePath('/(ui)/dashboard/customers');
-  redirect('/(ui)/dashboard/customers');
+  revalidatePath('/dashboard/customers');
+  redirect('/dashboard/customers');
 }
 
 export async function deleteCustomer(id: string) {
   try {
     await sql`DELETE FROM customers WHERE id = ${id}`;
-    revalidatePath('/(ui)/dashboard/customers');
+    revalidatePath('/dashboard/customers');
     return { message: 'Deleted Customer successfully.' };
   } catch (error) {
     return {
